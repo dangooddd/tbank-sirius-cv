@@ -1,0 +1,13 @@
+# Data directories
+data/raw/**
+!data/raw/
+data/processed/**
+!data/processed/
+models/**
+!models/
+
+# Venv
+.venv
+
+# Cache
+__pycache__
