@@ -2,6 +2,7 @@ from groundingdino.util.inference import load_model, load_image, predict
 from PIL import Image
 from pathlib import Path
 from rich.progress import track
+from utils import is_image
 import json
 
 
@@ -45,7 +46,7 @@ class Detector:
             extracted_boxes.append(
                 (
                     Image.fromarray(image[y1:y2, x1:x2, :]),
-                    {"x1": x1, "y1": y1, "x2": x2, "y2": y2},
+                    f"{x_center} {y_center} {w} {h}",
                 )
             )
 
@@ -71,13 +72,12 @@ class Detector:
 # Detects and saves all logo boxes found in images
 if __name__ == "__main__":
     detector = Detector()
-    image_extensions = {".jpg", ".jpeg", ".png"}
 
     for file_path in track(
-        Path("data/raw/").iterdir(), description="Extracting logos..."
+        Path("data/raw/images").iterdir(), description="Extracting logos..."
     ):
-        if file_path.is_file() and file_path.suffix.lower() in image_extensions:
-            save_dir = Path("data/boxes") / file_path.stem
+        if is_image(file_path):
+            save_dir = Path("data/raw/boxes") / file_path.stem
             image, boxes, _, _ = detector(file_path)
             extracted_boxes = detector.extract_boxes(image=image, boxes=boxes)
             detector.save_boxes(extracted_boxes, save_dir)
