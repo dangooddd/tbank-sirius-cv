@@ -24,7 +24,7 @@ tokenizer = open_clip.get_tokenizer(model_name)
 image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
 text = tokenizer(prompts).to(device)
 
-with torch.no_grad(), torch.amp.autocast("cuda"):
+with torch.no_grad(), torch.autocast("cuda"):
     image_embedding = model.encode_image(image)
     text_embedding = model.encode_text(text)
 
