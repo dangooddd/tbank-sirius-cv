@@ -1,9 +1,10 @@
+# Data directories
 data/raw/**
 data/processed/**
 data/boxes/**
 models/**
 
+# Python
 .venv/
-__pycache__/**
-
-!**/.gitkeep
+**/__pycache__/
+**/*egg-info/
