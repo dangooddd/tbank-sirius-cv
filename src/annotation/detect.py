@@ -4,6 +4,7 @@ from pathlib import Path
 from rich.progress import track
 from utils import is_image
 import json
+import argparse
 
 
 class Detector:
@@ -18,7 +19,7 @@ class Detector:
         self,
         image_path,
         text_prompt="logo",
-        box_threshold=0.35,
+        box_threshold=0.30,
         text_threshold=0.25,
     ):
         image, image_tensor = load_image(image_path)
@@ -58,12 +59,12 @@ class Detector:
         json_dict = {}
 
         for i, (image, coords) in enumerate(extracted_boxes):
-            image_path = save_dir / Path(f"{i}.jpg")
+            image_path = save_dir / f"{i}.jpg"
             image.save(image_path)
             json_dict[i] = coords
 
         try:
-            with open(save_dir / Path("metadata.json"), "w") as file:
+            with open(save_dir / "metadata.json", "w") as file:
                 json.dump(json_dict, file)
         except Exception as err:
             print(f"Ошибка при записи json: {err}")
@@ -71,13 +72,30 @@ class Detector:
 
 # Detects and saves all logo boxes found in images
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Detect logos in images")
+    parser.add_argument(
+        "--input-dir",
+        type=str,
+        default="data/raw/images",
+        help="Directory with input images",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="data/raw/boxes",
+        help="Directory to save detected boxes",
+    )
+    args = parser.parse_args()
+
     detector = Detector()
+    images_dir = Path(args.input_dir)
+    output_dir = Path(args.output_dir)
 
     for file_path in track(
-        Path("data/raw/images").iterdir(), description="Extracting logos..."
+        list(images_dir.iterdir()), description="Extracting logos..."
     ):
         if is_image(file_path):
-            save_dir = Path("data/raw/boxes") / file_path.stem
+            save_dir = output_dir / file_path.stem
             image, boxes, _, _ = detector(file_path)
             extracted_boxes = detector.extract_boxes(image=image, boxes=boxes)
             detector.save_boxes(extracted_boxes, save_dir)
