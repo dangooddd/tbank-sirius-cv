@@ -2,7 +2,7 @@ import open_clip
 import torch
 from PIL import Image
 from pathlib import Path
-from utils import is_image
+from tbank_logo_detector.utils import is_image
 from rich.progress import track
 import json
 import argparse

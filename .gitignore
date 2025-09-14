@@ -3,8 +3,12 @@ data/raw/**
 data/processed/**
 data/boxes/**
 models/**
+runs/**
 
 # Python
 .venv/
 **/__pycache__/
 **/*egg-info/
+
+# Ultralytics...
+yolo*.pt

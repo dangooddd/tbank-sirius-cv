@@ -1,0 +1,5 @@
+train: ../data/processed/images/train
+val: ../data/processed/images/val
+
+nc: 1
+names: ["tbank"]
