@@ -20,8 +20,8 @@ def main():
     detect_parser = subparsers.add_parser("detect")
     detect_parser.add_argument("--input-dir", type=Path, default="data/raw/images")
     detect_parser.add_argument("--output-dir", type=Path, default="data/raw/boxes")
-    detect_parser.add_argument("--box-threshold", type=int, default=0.3)
-    detect_parser.add_argument("--text-threshold", type=int, default=0.25)
+    detect_parser.add_argument("--box-threshold", type=float, default=0.3)
+    detect_parser.add_argument("--text-threshold", type=float, default=0.25)
 
     # split command
     split_parser = subparsers.add_parser("split")
