@@ -35,12 +35,17 @@ def main():
             batch=args.batch,
         )
     elif args.command == "predict":
-        predict(
+        result = predict(
             model_name=args.model_name,
             weights_path=args.weights_path,
             image_path=args.image_path,
             conf=args.conf,
         )
+
+        if result is None:
+            print("Логотип Т-Банка не найден")
+        else:
+            print("Логотип Т-Банк найден:", " ".join(map(str, result)))
 
 
 def train(model_name: str, weights_path: Path, epochs=50, batch=16):
@@ -49,7 +54,7 @@ def train(model_name: str, weights_path: Path, epochs=50, batch=16):
 
 
 def predict(model_name: str, weights_path: Path, image_path: Path, conf: float):
-    model = load_model(model_name, weights_path)
+    model = load_model(model_name=model_name, weights_path=weights_path)
     return model.predict(image_path=image_path, conf=conf)
 
 

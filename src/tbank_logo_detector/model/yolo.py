@@ -18,4 +18,17 @@ class YOLOModel:
         return self.model.val()
 
     def predict(self, image_path: str, conf: float = 0.25):
-        return self.model.predict(image_path, conf=conf)
+        results = self.model.predict(image_path, conf=conf)
+
+        if not results or len(results[0].boxes) == 0:
+            return None
+
+        # Get the box with highest confidence
+        boxes = results[0].boxes
+        best_box_idx = boxes.conf.argmax()
+
+        # Get coordinates in xyxy format (x1, y1, x2, y2)
+        box_coords = boxes.xyxy[best_box_idx].cpu().numpy()
+        x1, y1, x2, y2 = box_coords.astype(int)
+
+        return (x1, y1, x2, y2)
