@@ -4217,7 +4217,7 @@ wheels = [
 [[package]]
 name = "sirius-ml"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "groundingdino-py" },
     { name = "open-clip-torch", version = "2.32.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
@@ -4235,7 +4235,6 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "rich" },
-    { name = "sirius-ml" },
     { name = "tensorboard", version = "2.14.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "tensorboard", version = "2.20.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
 ]
@@ -4253,7 +4252,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "rich", specifier = ">=14.1.0" },
-    { name = "sirius-ml", virtual = "." },
     { name = "tensorboard", specifier = ">=2.14.0" },
 ]
 

@@ -17,17 +17,11 @@ dependencies = [
 [tool.pyright]
 typeCheckingMode = "off"
 
-[tool.uv.workspace]
-members = [
-    ".",
-]
-
-[tool.uv.sources]
-sirius-ml = { workspace = true, editable = true }
+[tool.uv]
+package = true
 
 [dependency-groups]
 dev = [
     "rich>=14.1.0",
-    "sirius-ml",
     "tensorboard>=2.14.0",
 ]
