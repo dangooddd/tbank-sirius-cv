@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 from PIL import Image
 from . import load_model
-from ..util import draw_bounding_box
+from ..util import draw_bounding_boxes
 
 
 def main():
@@ -57,9 +57,9 @@ def predict(model_name: str, weights_path: Path, image_path: Path, conf: float):
     if result is None:
         print("Логотип Т-Банка не найден")
     else:
-        print("Логотип Т-Банк найден:", " ".join(map(str, result)))
+        print("Логотип Т-Банк найден:", result)
         image = Image.open(image_path)
-        image = draw_bounding_box(image, *result)
+        image = draw_bounding_boxes(image, result)
         image.show()
 
 
