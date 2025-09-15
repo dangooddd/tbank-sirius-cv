@@ -2,7 +2,6 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 from rich.progress import track
 import shutil
-import argparse
 
 
 def copy_images_with_labels(
@@ -27,9 +26,7 @@ def copy_images_with_labels(
             continue
 
 
-def split_dataset_with_labels(dataset_dir, split_dst, val_size=0.2, seed=34):
-    dataset_dir = Path(dataset_dir)
-    split_dst = Path(split_dst)
+def split(dataset_dir: Path, split_dst: Path, val_size=0.2, seed=34):
     images_src = dataset_dir / "images"
     labels_src = dataset_dir / "labels"
 
@@ -58,21 +55,3 @@ def split_dataset_with_labels(dataset_dir, split_dst, val_size=0.2, seed=34):
     )
 
     return True
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Split dataset with labels")
-    parser.add_argument(
-        "--src", type=str, default="data/raw", help="Source dataset directory"
-    )
-    parser.add_argument(
-        "--dst", type=str, default="data/processed", help="Destination directory"
-    )
-    parser.add_argument(
-        "--val-size", type=float, default=0.2, help="Validation set size ratio"
-    )
-    parser.add_argument("--seed", type=int, default=34, help="Random seed")
-
-    args = parser.parse_args()
-
-    split_dataset_with_labels(args.src, args.dst, args.val_size, args.seed)

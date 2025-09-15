@@ -2,9 +2,8 @@ from groundingdino.util.inference import load_model, load_image, predict
 from PIL import Image
 from pathlib import Path
 from rich.progress import track
-from tbank_logo_detector.utils import is_image
+from tbank_logo_detector.util import is_image
 import json
-import argparse
 
 
 class Detector:
@@ -70,26 +69,23 @@ class Detector:
             print(f"Ошибка при записи json: {err}")
 
 
-# Detects and saves all logo boxes found in images
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Detect logos in images")
-    parser.add_argument(
-        "--input-dir",
-        type=str,
-        default="data/raw/images",
-        help="Directory with input images",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=str,
-        default="data/raw/boxes",
-        help="Directory to save detected boxes",
-    )
-    args = parser.parse_args()
-
+def detect(images_dir: Path, output_dir: Path):
+    """
+    Detects and saves all logo boxes found in images dir
+    If follow directory is given:
+        images_dir/
+            img1.jpg
+            img2.jpg
+    There will be created directory:
+        output_dir/
+            img1/
+                0.jpg
+                1.jpg
+                metadata.json
+            img2/
+                ...
+    """
     detector = Detector()
-    images_dir = Path(args.input_dir)
-    output_dir = Path(args.output_dir)
 
     for file_path in track(
         list(images_dir.iterdir()), description="Extracting logos..."

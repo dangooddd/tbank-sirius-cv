@@ -2,10 +2,10 @@ import open_clip
 import torch
 from PIL import Image
 from pathlib import Path
-from tbank_logo_detector.utils import is_image
+from tbank_logo_detector.util import is_image
 from rich.progress import track
 import json
-import argparse
+
 
 positive_prompts = [
     "логотип Т-Банк",
@@ -38,6 +38,9 @@ negative_prompts = [
     "cиний",
     "красный",
     "зеленый",
+    "круг",
+    "круглое лого",
+    "circle",
     "green logo",
     "red logo",
     "blue logo",
@@ -184,26 +187,9 @@ class Annotator:
             file.write(annotation)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Annotate detected boxes")
-    parser.add_argument(
-        "--input-dir",
-        type=str,
-        default="data/raw/boxes",
-        help="Directory with detected boxes",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=str,
-        default="data/raw/labels",
-        help="Directory to save annotations",
-    )
-
-    args = parser.parse_args()
-
+def annotate(boxes_dir: Path, output_dir: Path):
+    """Annotates images from boxes that was defined in detect.py"""
     annotator = Annotator()
-    boxes_dir = Path(args.input_dir)
-    output_dir = Path(args.output_dir)
 
     for boxes_path in track(list(boxes_dir.iterdir()), "Annotating images..."):
         if boxes_path.is_dir():
