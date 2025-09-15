@@ -69,7 +69,12 @@ class Detector:
             print(f"Ошибка при записи json: {err}")
 
 
-def detect(images_dir: Path, output_dir: Path):
+def detect(
+    images_dir: Path,
+    output_dir: Path,
+    box_threshold=0.30,
+    text_threshold=0.25,
+):
     """
     Detects and saves all logo boxes found in images dir
     If follow directory is given:
@@ -92,6 +97,10 @@ def detect(images_dir: Path, output_dir: Path):
     ):
         if is_image(file_path):
             save_dir = output_dir / file_path.stem
-            image, boxes, _, _ = detector(file_path)
+            image, boxes, _, _ = detector(
+                file_path,
+                box_threshold=box_threshold,
+                text_threshold=text_threshold,
+            )
             extracted_boxes = detector.extract_boxes(image=image, boxes=boxes)
             detector.save_boxes(extracted_boxes, save_dir)

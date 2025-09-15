@@ -50,6 +50,7 @@ negative_prompts = [
     "текст",
     "text",
     "банкомат",
+    "логотип банкомата",
     "Tinkoff logo",
     "Deutsche logo",
     "логотип Тинькофф",
@@ -187,7 +188,12 @@ class Annotator:
             file.write(annotation)
 
 
-def annotate(boxes_dir: Path, output_dir: Path):
+def annotate(
+    boxes_dir: Path,
+    output_dir: Path,
+    model_name="ViT-H-14",
+    pretrained="laion2b_s32b_b79k",
+):
     """Annotates images from boxes that was defined in detect.py"""
     annotator = Annotator()
 

@@ -13,11 +13,15 @@ def main():
     annotate_parser = subparsers.add_parser("annotate")
     annotate_parser.add_argument("--input-dir", type=Path, default="data/raw/boxes")
     annotate_parser.add_argument("--output-dir", type=Path, default="data/raw/labels")
+    annotate_parser.add_argument("--model-name", type=str, default="ViT-H-14")
+    annotate_parser.add_argument("--pretrained", type=str, default="laion2b_s32b_b79k")
 
     # detect command
     detect_parser = subparsers.add_parser("detect")
     detect_parser.add_argument("--input-dir", type=Path, default="data/raw/images")
     detect_parser.add_argument("--output-dir", type=Path, default="data/raw/boxes")
+    detect_parser.add_argument("--box-threshold", type=int, default=0.3)
+    detect_parser.add_argument("--text-threshold", type=int, default=0.25)
 
     # split command
     split_parser = subparsers.add_parser("split")
@@ -29,11 +33,21 @@ def main():
     args = parser.parse_args()
 
     if args.command == "annotate":
-        annotate(args.input_dir, args.output_dir)
+        annotate(
+            boxes_dir=args.input_dir,
+            output_dir=args.output_dir,
+            model_name=args.model_name,
+            pretrained=args.pretrained,
+        )
     elif args.command == "detect":
-        detect(args.input_dir, args.output_dir)
+        detect(
+            images_dir=args.input_dir,
+            output_dir=args.output_dir,
+            box_threshold=args.box_threshold,
+            text_threshold=args.text_threshold,
+        )
     elif args.command == "split":
-        split(args.src, args.dst, args.val_size, args.seed)
+        split(src=args.src, dst=args.dst, val_size=args.val_size, seed=args.seed)
 
 
 if __name__ == "__main__":
