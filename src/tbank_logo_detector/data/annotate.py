@@ -2,7 +2,7 @@ import open_clip
 import torch
 from PIL import Image
 from pathlib import Path
-from tbank_logo_detector.util import is_image
+from ..util import is_image
 from rich.progress import track
 import json
 
@@ -98,7 +98,7 @@ negative_prompts = [
 ]
 
 
-class Annotator:
+class LegacyAnnotator:
     @torch.no_grad()
     def __init__(
         self,
@@ -188,14 +188,111 @@ class Annotator:
             file.write(annotation)
 
 
-def annotate(
+class Annotator:
+    @torch.no_grad()
+    def __init__(
+        self,
+        model_name: str = "ViT-bigG-14",
+        pretrained: str = "laion2b_s39b_b160k",
+        reference_dir: Path = Path("data/raw/reference"),
+        conf: float = 0.8,
+        device: str = "cuda",
+    ):
+        self.device = device
+        self.model, _, self.preprocess = open_clip.create_model_and_transforms(
+            model_name=model_name,
+            pretrained=pretrained,
+            device=device,
+        )
+        self.conf = conf
+
+        images = []
+        for image_path in reference_dir.iterdir():
+            if is_image(image_path):
+                images.append(self.preprocess(Image.open(image_path)).to(self.device))
+
+        self.features = self._get_image_features(torch.stack(images))
+
+    @torch.no_grad
+    def _get_image_features(self, image):
+        image_features = self.model.encode_image(image)
+        image_features /= image_features.norm(dim=-1, keepdim=True)
+        return image_features
+
+    @torch.no_grad
+    def _cosine_similarity(self, first_features, second_features):
+        similarity = first_features @ second_features.T
+        return similarity
+
+    def annotate_image_from_boxes(self, boxes_path):
+        boxes_path = Path(boxes_path)
+        boxes = []
+
+        try:
+            with open(boxes_path / Path("metadata.json"), "r") as file:
+                metadata = json.load(file)
+        except Exception:
+            return
+
+        for file_path in boxes_path.iterdir():
+            if is_image(file_path):
+                box_num = file_path.stem
+                image = (
+                    self.preprocess(Image.open(file_path)).unsqueeze(0).to(self.device)
+                )
+                image_features = self._get_image_features(image)
+                scores = self._cosine_similarity(image_features, self.features)
+
+                if scores.max() > self.conf:
+                    boxes.append(box_num)
+
+        annotation = ""
+        for box_num in boxes:
+            annotation += f"0 {metadata[box_num]}\n"
+
+        return annotation
+
+    def create_label_file(self, label_path, annotation):
+        if annotation is None:
+            return
+
+        label_path = Path(label_path)
+        label_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(label_path, "w") as file:
+            file.write(annotation)
+
+
+def legacy_annotate(
     boxes_dir: Path,
     output_dir: Path,
     model_name="ViT-H-14",
     pretrained="laion2b_s32b_b79k",
 ):
     """Annotates images from boxes that was defined in detect.py"""
-    annotator = Annotator()
+    annotator = Annotator(model_name=model_name, pretrained=pretrained)
+
+    for boxes_path in track(list(boxes_dir.iterdir()), "Annotating images..."):
+        if boxes_path.is_dir():
+            label_path = output_dir / f"{boxes_path.stem}.txt"
+            annotation = annotator.annotate_image_from_boxes(boxes_path)
+            annotator.create_label_file(label_path, annotation)
+
+
+def annotate(
+    boxes_dir: Path,
+    output_dir: Path,
+    reference_dir: Path = "data/reference",
+    conf=0.8,
+    model_name="ViT-bigG-14",
+    pretrained="laion2b_s32b_b79k",
+):
+    """Annotates images from boxes that was defined in detect.py"""
+    annotator = Annotator(
+        model_name=model_name,
+        pretrained=pretrained,
+        reference_dir=reference_dir,
+        conf=conf,
+    )
 
     for boxes_path in track(list(boxes_dir.iterdir()), "Annotating images..."):
         if boxes_path.is_dir():

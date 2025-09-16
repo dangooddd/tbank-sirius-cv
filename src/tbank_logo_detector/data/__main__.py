@@ -13,8 +13,10 @@ def main():
     annotate_parser = subparsers.add_parser("annotate")
     annotate_parser.add_argument("--input-dir", type=Path, default="data/raw/boxes")
     annotate_parser.add_argument("--output-dir", type=Path, default="data/raw/labels")
-    annotate_parser.add_argument("--model-name", type=str, default="ViT-H-14")
-    annotate_parser.add_argument("--pretrained", type=str, default="laion2b_s32b_b79k")
+    annotate_parser.add_argument("--reference-dir", type=Path, default="data/reference")
+    annotate_parser.add_argument("--conf", type=float, default=0.8)
+    annotate_parser.add_argument("--model-name", type=str, default="ViT-bigG-14")
+    annotate_parser.add_argument("--pretrained", type=str, default="laion2b_s39b_b160k")
 
     # detect command
     detect_parser = subparsers.add_parser("detect")
@@ -36,6 +38,8 @@ def main():
         annotate(
             boxes_dir=args.input_dir,
             output_dir=args.output_dir,
+            reference_dir=args.reference_dir,
+            conf=args.conf,
             model_name=args.model_name,
             pretrained=args.pretrained,
         )

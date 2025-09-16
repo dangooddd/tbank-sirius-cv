@@ -1,9 +1,9 @@
 # Data directories
-data/raw/**
-data/processed/**
-data/boxes/**
-models/**
-runs/**
+data/raw/
+data/processed/
+data/test/
+models/
+runs/
 
 # Python
 .venv/
