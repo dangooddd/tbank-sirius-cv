@@ -51,7 +51,12 @@ def main():
             text_threshold=args.text_threshold,
         )
     elif args.command == "split":
-        split(src=args.src, dst=args.dst, val_size=args.val_size, seed=args.seed)
+        split(
+            dataset_dir=args.src,
+            split_dst=args.dst,
+            val_size=args.val_size,
+            seed=args.seed,
+        )
 
 
 if __name__ == "__main__":
