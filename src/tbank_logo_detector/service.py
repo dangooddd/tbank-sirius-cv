@@ -92,9 +92,11 @@ async def detect_logo(file: UploadFile = File(...)):
     image_bytes = await file.read()
     image_stream = io.BytesIO(image_bytes)
 
-    # open image
     try:
-        image = Image.open(image_stream)
+        # Без .copy обьект image остается связанным с image_stream.
+        # В таком случае после image.verify() указатель image_stream сместится
+        # и повторно использовать изображение не выйдет
+        image = Image.open(image_stream).copy()
         image.verify()
     except UnidentifiedImageError as e:
         raise ServiceError(
@@ -102,19 +104,15 @@ async def detect_logo(file: UploadFile = File(...)):
             error_response=ErrorResponse(error="Invalid image file", detail=str(e)),
         )
     except Exception as e:
-        print(1)
         raise ServiceError(
             status_code=500,
             error_response=ErrorResponse(error="Error processing image", detail=str(e)),
         )
 
-    # Detect logo
     global model
     try:
         boxes = model.predict(image=image, conf=config["conf"])
     except Exception as e:
-        print(2)
-        print(config)
         raise ServiceError(
             status_code=500,
             error_response=ErrorResponse(error="Error while predicting", detail=str(e)),
