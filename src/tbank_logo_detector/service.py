@@ -1,3 +1,5 @@
+import io
+from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from fastapi import FastAPI, File, UploadFile, HTTPException
@@ -74,3 +76,39 @@ async def detect_logo(file: UploadFile = File(...)):
         raise HTTPException(
             status_code=400, detail={"error": "Uploaded file is not an image"}
         )
+
+    image_bytes = await file.read()
+    image_stream = io.BytesIO(image_bytes)
+
+    # open image
+    try:
+        image = Image.open(image_stream)
+        image.verify()
+    except UnidentifiedImageError as e:
+        raise HTTPException(
+            status_code=400, detail={"error": "Invalid image file", "detail": str(e)}
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={"error": "Error processing image", "detail": str(e)},
+        )
+
+    # Detect logo
+    try:
+        boxes = model.predict(image=image, conf=config["conf"])
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail={"error": "Error while predicting", "detail": str(e)},
+        )
+
+    detections = []
+    for box in boxes:
+        detections.append(
+            Detection(
+                bbox=BoundingBox(x_min=box[0], y_min=box[1], x_max=box[2], y_max=box[3])
+            )
+        )
+
+    return DetectionResponse(detections)

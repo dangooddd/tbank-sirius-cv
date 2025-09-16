@@ -17,8 +17,8 @@ class YOLOModel:
     def validate(self):
         return self.model.val()
 
-    def predict(self, image_path: str, conf: float = 0.4):
-        results = self.model.predict(image_path, conf=conf)
+    def predict(self, image: str, conf: float = 0.4):
+        results = self.model.predict(image, conf=conf)
 
         if not results or len(results[0].boxes) == 0:
             return None
