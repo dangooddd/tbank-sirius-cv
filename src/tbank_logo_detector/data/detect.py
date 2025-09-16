@@ -2,7 +2,7 @@ from groundingdino.util.inference import load_model, load_image, predict
 from PIL import Image
 from pathlib import Path
 from rich.progress import track
-from tbank_logo_detector.util import is_image
+from ..util import is_image
 import json
 
 

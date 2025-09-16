@@ -1,4 +1,5 @@
 from ultralytics import YOLO
+from PIL import Image
 
 
 class YOLOModel:
@@ -17,11 +18,8 @@ class YOLOModel:
     def validate(self):
         return self.model.val()
 
-    def predict(self, image: str, conf: float = 0.4):
+    def predict(self, image: str | Image.Image, conf: float = 0.4):
         results = self.model.predict(image, conf=conf)
-
-        if not results or len(results[0].boxes) == 0:
-            return None
 
         # Преобразование действительных box в целые
         boxes = results[0].boxes

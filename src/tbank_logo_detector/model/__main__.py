@@ -54,7 +54,7 @@ def predict(model_name: str, weights_path: Path, image_path: Path, conf: float):
     model = load_model(model_name=model_name, weights_path=weights_path)
     result = model.predict(image=image_path, conf=conf)
 
-    if result is None:
+    if len(result) == 0:
         print("Логотип Т-Банка не найден")
     else:
         print("Логотип Т-Банк найден:", result)

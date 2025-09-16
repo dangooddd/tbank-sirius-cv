@@ -2,17 +2,10 @@ import io
 from PIL import Image, UnidentifiedImageError
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, Request
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from .model import load_model
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    global model
-    model = load_model(config["model_name"], config["weights_path"])
-    yield
-
 
 config = {
     "model_name": "yolo",
@@ -21,6 +14,14 @@ config = {
 }
 
 model = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    model = load_model(config["model_name"], config["weights_path"])
+    yield
+
 
 app = FastAPI(
     title="T-Bank Logo Detector",
@@ -57,11 +58,21 @@ class ErrorResponse(BaseModel):
     detail: Optional[str] = Field(None, description="Дополнительная информация")
 
 
-@app.post(
-    "/detect",
-    response_model=DetectionResponse,
-    responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
-)
+class ServiceError(Exception):
+    def __init__(self, status_code: int, error_response: ErrorResponse):
+        self.status_code = status_code
+        self.error_response = error_response
+
+
+@app.exception_handler(ServiceError)
+async def http_exception_handler(request: Request, exc: ServiceError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=exc.error_response.model_dump(),
+    )
+
+
+@app.post("/detect", response_model=DetectionResponse)
 async def detect_logo(file: UploadFile = File(...)):
     """
     Детекция логотипа Т-банка на изображении
@@ -73,8 +84,9 @@ async def detect_logo(file: UploadFile = File(...)):
         DetectionResponse: Результаты детекции с координатами найденных логотипов
     """
     if not file.content_type.startswith("image/"):
-        raise HTTPException(
-            status_code=400, detail={"error": "Uploaded file is not an image"}
+        raise ServiceError(
+            status_code=400,
+            error_response=ErrorResponse(error="Uploaded file is not an image"),
         )
 
     image_bytes = await file.read()
@@ -85,22 +97,27 @@ async def detect_logo(file: UploadFile = File(...)):
         image = Image.open(image_stream)
         image.verify()
     except UnidentifiedImageError as e:
-        raise HTTPException(
-            status_code=400, detail={"error": "Invalid image file", "detail": str(e)}
+        raise ServiceError(
+            status_code=400,
+            error_response=ErrorResponse(error="Invalid image file", detail=str(e)),
         )
     except Exception as e:
-        raise HTTPException(
+        print(1)
+        raise ServiceError(
             status_code=500,
-            detail={"error": "Error processing image", "detail": str(e)},
+            error_response=ErrorResponse(error="Error processing image", detail=str(e)),
         )
 
     # Detect logo
+    global model
     try:
         boxes = model.predict(image=image, conf=config["conf"])
     except Exception as e:
-        raise HTTPException(
+        print(2)
+        print(config)
+        raise ServiceError(
             status_code=500,
-            detail={"error": "Error while predicting", "detail": str(e)},
+            error_response=ErrorResponse(error="Error while predicting", detail=str(e)),
         )
 
     detections = []
@@ -111,4 +128,4 @@ async def detect_logo(file: UploadFile = File(...)):
             )
         )
 
-    return DetectionResponse(detections)
+    return DetectionResponse(detections=detections)
