@@ -22,6 +22,7 @@ typeCheckingMode = "off"
 
 [tool.uv]
 package = true
+required-environments = ["sys_platform == 'linux'"]
 
 [dependency-groups]
 dev = [

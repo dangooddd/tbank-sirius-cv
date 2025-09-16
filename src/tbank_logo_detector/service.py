@@ -9,7 +9,7 @@ from .model import load_model
 
 config = {
     "model_name": "yolo",
-    "weights_path": "models/yolo/yolov8l_best.pt",
+    "weights_path": "weights.pt",
     "conf": 0.6,
 }
 
