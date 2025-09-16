@@ -1,11 +1,29 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from contextlib import asynccontextmanager
 from .model import load_model
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    model = load_model(config["model_name"], config["weights_path"])
+    yield
+
+
+config = {
+    "model_name": "yolo",
+    "weights_path": "models/yolo/yolov8l_best.pt",
+    "conf": 0.6,
+}
+
+model = None
 
 app = FastAPI(
     title="T-Bank Logo Detector",
     description="API для детекции логотипа Т-банка на изображениях",
+    lifespan=lifespan,
 )
 
 
@@ -37,8 +55,11 @@ class ErrorResponse(BaseModel):
     detail: Optional[str] = Field(None, description="Дополнительная информация")
 
 
-# Пример эндпоинта
-@app.post("/detect", response_model=DetectionResponse)
+@app.post(
+    "/detect",
+    response_model=DetectionResponse,
+    responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
+)
 async def detect_logo(file: UploadFile = File(...)):
     """
     Детекция логотипа Т-банка на изображении
@@ -49,4 +70,7 @@ async def detect_logo(file: UploadFile = File(...)):
     Returns:
         DetectionResponse: Результаты детекции с координатами найденных логотипов
     """
-    pass
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=400, detail={"error": "Uploaded file is not an image"}
+        )
