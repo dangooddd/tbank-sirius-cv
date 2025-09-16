@@ -1,6 +1,5 @@
-data/raw/
-data/processed/
-data/test/
+data/**
+!data/reference
 models/
 runs/
 

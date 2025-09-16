@@ -1,11 +1,22 @@
 #!/bin/sh
 
-WEIGHTS_URL="https://github.com/username/repo/releases/latest/weights.pt"
-DEST_PATH="/app/weights.pt"
+OWNER="dangooddd"
+REPO="tbank-sirius-cv"
+ASSET_NAME="weights.pt"
+DEST_PATH="weights.pt"
 
 if [ ! -f "$DEST_PATH" ]; then
     echo "Downloading model weights..."
-    curl -L -o "$DEST_PATH" "$WEIGHTS_URL"
+
+    DOWNLOAD_URL=$(curl -s https://api.github.com/repos/"$OWNER"/"$REPO"/releases/latest \
+      | jq -r ".assets[] | select(.name==\"$ASSET_NAME\") | .url")
+
+    if ! curl -L -H "Accept: application/octet-stream" $DOWNLOAD_URL -o $ASSET_NAME; then
+        echo "Error: Failed to download model weights" >&2
+        exit 1
+    fi
+else
+    echo "Weights already downloaded."
 fi
 
-uvicorn tbank_logo_detector.service:app --host 0.0.0.0 --port 8000
+uv run uvicorn tbank_logo_detector.service:app --host 0.0.0.0 --port 8000
