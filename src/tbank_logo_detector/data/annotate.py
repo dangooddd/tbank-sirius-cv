@@ -225,6 +225,15 @@ class Annotator:
         return similarity
 
     def annotate_image_from_boxes(self, boxes_path):
+        """
+        Аннотация одного изображения из его boxes представления
+
+        Args:
+            boxes_path: путь к boxes представлению изображения
+
+        Returns:
+            labels: строка в формате labels YOLO моделей
+        """
         boxes_path = Path(boxes_path)
         boxes = []
 
@@ -234,6 +243,7 @@ class Annotator:
         except Exception:
             return
 
+        # подробное описание в docs/EXPERIMENTS.md, эксперимент 3
         for file_path in boxes_path.iterdir():
             if is_image(file_path):
                 box_num = file_path.stem
@@ -268,7 +278,10 @@ def legacy_annotate(
     model_name: str,
     pretrained: str,
 ):
-    """Annotates images from boxes that was defined in detect.py"""
+    """
+    Размечает данные всего датасета в формате boxes,
+    который получен в результате работы detect (legacy метод)
+    """
     annotator = Annotator(model_name=model_name, pretrained=pretrained)
 
     for boxes_path in track(list(boxes_dir.iterdir()), "Annotating images..."):
@@ -286,7 +299,10 @@ def annotate(
     model_name: str,
     pretrained: str,
 ):
-    """Annotates images from boxes that was defined in detect.py"""
+    """
+    Размечает данные всего датасета в формате boxes,
+    который получен в результате работы detect
+    """
     annotator = Annotator(
         model_name=model_name,
         pretrained=pretrained,

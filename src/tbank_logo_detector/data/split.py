@@ -27,6 +27,15 @@ def copy_images_with_labels(
 
 
 def split(dataset_dir: Path, split_dst: Path, val_size: float, seed=34):
+    """
+    Сделать test/val разделение данного датасета
+
+    Args:
+        dataset_dir: путь к датасету в raw формате
+        split_dst: пусть к новому датасету в подходящем для YOLO формате
+        val_size: относительный размер валидационной выборки
+        seed: сид разделения
+    """
     images_src = dataset_dir / "images"
     labels_src = dataset_dir / "labels"
 

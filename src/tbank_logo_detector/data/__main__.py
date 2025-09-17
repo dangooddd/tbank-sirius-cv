@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # annotate command
+    # annotate
     annotate_parser = subparsers.add_parser("annotate")
     annotate_parser.add_argument("--input-dir", type=Path, default="data/raw/boxes")
     annotate_parser.add_argument("--output-dir", type=Path, default="data/raw/labels")
@@ -20,14 +20,14 @@ def main():
     annotate_parser.add_argument("--model-name", type=str, default="ViT-bigG-14")
     annotate_parser.add_argument("--pretrained", type=str, default="laion2b_s39b_b160k")
 
-    # detect command
+    # detect
     detect_parser = subparsers.add_parser("detect")
     detect_parser.add_argument("--input-dir", type=Path, default="data/raw/images")
     detect_parser.add_argument("--output-dir", type=Path, default="data/raw/boxes")
     detect_parser.add_argument("--box-threshold", type=float, default=0.3)
     detect_parser.add_argument("--text-threshold", type=float, default=0.25)
 
-    # split command
+    # split
     split_parser = subparsers.add_parser("split")
     split_parser.add_argument("--src", type=Path, default="data/raw")
     split_parser.add_argument("--dst", type=Path, default="data/processed")

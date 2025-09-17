@@ -16,11 +16,20 @@ class Detector:
 
     def __call__(
         self,
-        image_path,
+        image_path: Path | str,
         text_prompt="logo",
         box_threshold=0.30,
         text_threshold=0.25,
     ):
+        """
+        Получить основные результаты детекции
+
+        Returns:
+            image: numpy массив с изображением
+            boxes: массив с найденными boxes
+            logits: логиты boxes
+            phrases: текстовое описание boxes
+        """
         image, image_tensor = load_image(image_path)
         boxes, logits, phrases = predict(
             model=self.model,
@@ -33,6 +42,7 @@ class Detector:
         return image, boxes, logits, phrases
 
     def extract_boxes(self, image, boxes):
+        """Выделяет box из изображения как другое изображение"""
         height, width, _ = image.shape
         extracted_boxes = []
 
@@ -76,12 +86,12 @@ def detect(
     text_threshold: float,
 ):
     """
-    Detects and saves all logo boxes found in images dir
-    If follow directory is given:
+    Находит сохраняет все boxes, найденные в папке images_dir
+    Например, если дана следующая директория:
         images_dir/
             img1.jpg
             img2.jpg
-    There will be created directory:
+    Будет создана следующая директория:
         output_dir/
             img1/
                 0.jpg
