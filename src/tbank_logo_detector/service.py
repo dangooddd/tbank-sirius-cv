@@ -18,6 +18,7 @@ model = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Входной и выходной контекст сервиса"""
     global model
     model = load_model(config["model_name"], config["weights_path"])
     yield
