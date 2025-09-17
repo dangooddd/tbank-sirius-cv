@@ -6,7 +6,7 @@ RUN pip install uv
 COPY uv.lock pyproject.toml LICENSE start.sh /app/
 COPY src/ /app/src/
 
-WORKDIR /app/
+WORKDIR /app
 
 RUN chmod +x start.sh
 RUN uv venv --python 3.11 .venv

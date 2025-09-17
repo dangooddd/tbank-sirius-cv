@@ -1,5 +1,6 @@
 data/**
 !data/reference
+!data/sample
 models/
 runs/
 

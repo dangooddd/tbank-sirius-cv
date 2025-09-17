@@ -10,7 +10,7 @@
 
 ### Данные // пререквизиты
 
-https://data.tinkoff.ru/s/YsqPKQkapc5xKMb (password: `7*5\Lq=Oik`)
+https://data.tinkoff.ru/s/YsqPKQkapc5xKMb (password: `пароль исключен из публичной версии файла`)
 
 Мы предоставляем вам неразмеченный датасет для обучения и валидации, содержащий:
 
