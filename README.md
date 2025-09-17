@@ -12,7 +12,7 @@
 
 ## Быстрый запуск
 
-Запуск сервиса осуществляется с помощью
+Запуск сервиса осуществляется с помощью docker/podman контейнера и доступен по адресу `http://localhost:8000`:
 
 ```bash
 docker build -t tbank-logo-detector .
@@ -21,7 +21,7 @@ docker run -p 8000:8000 tbank-logo-detector
 
 ## Пример работы модели
 
-<img src="assets/sample/results.jpg" width="600" />
+<img src="assets/sample/results.jpg" width="800" />
 
 ## Структура
 
@@ -38,8 +38,9 @@ sirius-ml/
 ```
 
 > [!Note]
-> Подробнее о процессе обучения моделей см. в файле [docs/ML.md](docs/ML.md)
-> Проведенные эксперименты задокументированы в файле [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)
+> Подробнее о процессе обучения моделей см. в файле [docs/ML.md](docs/ML.md).
+>
+> Проведенные эксперименты задокументированы в файле [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
 
 ## API документация
 
