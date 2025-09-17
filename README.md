@@ -20,7 +20,7 @@ docker run -p 8000:8000 tbank-logo-detector
 ```
 
 Веса модели скачиваются автоматически при запуске контейнера.
-Они доступны для скачивания на [странице релизов](https://github.com/dangooddd/tbank-sirius-cv/releases)
+Они доступны для скачивания на [странице релизов](https://github.com/dangooddd/tbank-sirius-cv/releases).
 
 ## Пример работы модели
 
