@@ -1,6 +1,7 @@
-data/
-models/
-runs/
+data/**
+models/**
+runs/**
+assets/**
 
 .venv/
 **/__pycache__/

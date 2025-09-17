@@ -1,8 +1,6 @@
 data/**
-!data/reference
-!data/sample
-models/
-runs/
+models/**
+runs/**
 
 .venv/
 **/__pycache__/
