@@ -3,7 +3,7 @@ from PIL import Image
 
 
 class YOLOModel:
-    def __init__(self, weights: str = "models/yolo/yolov8l.pt"):
+    def __init__(self, weights: str = "weights/yolo/yolov8l.pt"):
         self.model = YOLO(weights)
         self.data_yaml = "configs/yolo_dataset.yaml"
 

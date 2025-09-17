@@ -13,19 +13,19 @@ def main():
     train_parser = subparsers.add_parser("train")
     train_parser.add_argument("--model-name", type=str, default="yolo")
     train_parser.add_argument(
-        "--weights-path", type=Path, default="models/yolo/yolov8l.pt"
+        "--weights-path", type=Path, default="weights/yolo/yolov8l.pt"
     )
     train_parser.add_argument("--epochs", type=int, default=50)
     train_parser.add_argument("--batch", type=int, default=16)
     train_parser.add_argument("--nbs", type=int, default=64)
     train_parser.add_argument("--lr0", type=float, default=0.01)
-    train_parser.add_argument("--resume", type=bool, default=False)
+    train_parser.add_argument("--resume", action="store_true")
 
     # predict command
     predict_parser = subparsers.add_parser("predict")
     predict_parser.add_argument("--model-name", type=str, default="yolo")
     predict_parser.add_argument(
-        "--weights-path", type=Path, default="models/yolo/yolov8l.pt"
+        "--weights-path", type=Path, default="weights/yolo/yolov8l.pt"
     )
     predict_parser.add_argument("--image-path", type=Path, required=True)
     predict_parser.add_argument("--conf", type=float, default=0.25)

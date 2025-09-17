@@ -14,7 +14,7 @@
 ## Разметка данных
 
 Для разметки данных было использовано несколько подходов, подробнее описанных в [экспериментах](EXPERIMENTS.md).
-Однако, все подходы производили аннотацию изображений в два этапа:
+Однако, почти все подходы производили аннотацию изображений в два этапа:
 1) Нахождение в изображении всех логотип с помощью модели [Grounding Dino](https://github.com/IDEA-Research/GroundingDINO)
 2) Аннотация локализованных логотипов с помощью [CLIP](https://github.com/mlfoundations/open_clip) модели
 
@@ -32,12 +32,12 @@ nice_image/
 Реализация находится в модуле data.
 
 Для нахождения логотипов с помощью Grounding Dino см.:
-```python
+```sh
 uv run -m tbank_logo_detector.data detect --help
 ```
 
 Для аннотации полученных на прошлом этапе boxes см.:
-```python
+```sh
 uv run -m tbank_logo_detector.data annotate --help
 ```
 
@@ -48,6 +48,13 @@ uv run -m tbank_logo_detector.data annotate --help
 
 Процесс обучения модели реализован в модуле model.
 Для обучения см. подробнее:
-```python
+```sh
 uv run -m tbank_logo_detector.model train --help
+```
+
+## Тестирование сервиса
+Для проверки работоспособности взаимодействия сервиса с основным пакетом используется `pytest`:
+
+```sh
+uv run -m pytest tests/test_service.py -v
 ```

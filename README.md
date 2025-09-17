@@ -54,4 +54,4 @@ sirius-ml/
 
 Проект распространяется под лицензией AGPL. Подробнее см. в файле [LICENSE](LICENSE).
 
-В качестве базовых используются модели [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
+В качестве базовых используются модели [Ultralytics YOLO](https://github.com/ultralytics/ultralytics).
