@@ -5,7 +5,7 @@ from PIL import Image
 class YOLOModel:
     def __init__(self, weights: str = "weights/yolo/yolov8l.pt"):
         self.model = YOLO(weights)
-        self.data_yaml = "configs/yolo_dataset.yaml"
+        self.cfg = "configs/yolo_config.yaml"
 
     def train(
         self,
@@ -17,7 +17,7 @@ class YOLOModel:
         resume: bool = False,
     ):
         return self.model.train(
-            data=self.data_yaml,
+            cfg=self.cfg,
             epochs=epochs,
             imgsz=imgsz,
             batch=batch,

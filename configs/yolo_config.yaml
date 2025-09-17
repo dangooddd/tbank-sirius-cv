@@ -1,0 +1,4 @@
+data: yolo_dataset.yaml
+degrees: 25.0
+shear: 12.5
+translate: 0.15
