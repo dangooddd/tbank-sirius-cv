@@ -21,7 +21,7 @@ docker run -p 8000:8000 tbank-logo-detector
 
 ## Пример работы модели
 
-<img src="assets/sample/results.jgp" width="600" />
+<img src="assets/sample/results.jpg" width="600" />
 
 ## Структура
 
