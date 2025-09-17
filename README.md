@@ -14,7 +14,7 @@
 
 Запуск сервиса осуществляется с помощью docker/podman контейнера и доступен по адресу `http://localhost:8000`:
 
-```bash
+```sh
 docker build -t tbank-logo-detector .
 docker run -p 8000:8000 tbank-logo-detector
 ```
@@ -22,28 +22,38 @@ docker run -p 8000:8000 tbank-logo-detector
 Веса модели скачиваются автоматически при запуске контейнера.
 Они доступны для скачивания на [странице релизов](https://github.com/dangooddd/tbank-sirius-cv/releases).
 
+Чтобы избежать скачивания весов при повторном запуске контейнера, можно использовать docker volumes:
+
+```sh
+docker volume create weights
+docker run -v weights:/app/weights -p 8000:8000 tbank-logo-detector
+```
+
 ## Пример работы модели
 
-<img src="assets/sample/results.jpg" width="800" />
+<img src="assets/sample/results_1.jpg" width="800" />
+
+<img src="assets/sample/results_2.jpg" width="800" />
 
 ## Структура
+
+> [!Note]
+> Подробнее о процессе обучения моделей см. в файле [docs/ML.md](docs/ML.md).
+>
+> Проведенные эксперименты задокументированы в файле [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
 
 ```
 sirius-ml/
 ├── src/           # Исходный код проекта и сервиса
 ├── configs/       # Конфигурационные файлы
 ├── data/          # Данные для обучения и валидации
-├── models/        # Модели машинного обучения
+├── assets/        # Другие данные
+├── weights/       # Веса моделей
 ├── tests/         # Тесты
 ├── docs/          # Документация
 ├── Dockerfile     # Конфигурация Docker
 └── pyproject.toml # Зависимости проекта
 ```
-
-> [!Note]
-> Подробнее о процессе обучения моделей см. в файле [docs/ML.md](docs/ML.md).
->
-> Проведенные эксперименты задокументированы в файле [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
 
 ## API документация
 
