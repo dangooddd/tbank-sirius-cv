@@ -21,4 +21,4 @@ else
     echo "Weights already downloaded."
 fi
 
-uv run uvicorn tbank_logo_detector.service:app --host 0.0.0.0 --port 8000
+uv run --no-dev uvicorn tbank_logo_detector.service:app --host 0.0.0.0 --port 8000

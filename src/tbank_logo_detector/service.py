@@ -10,7 +10,7 @@ from .model import load_model
 config = {
     "model_name": "yolo",
     "weights_path": "weights/weights.pt",
-    "conf": 0.6,
+    "conf": 0.35,
 }
 
 model = None
