@@ -6,6 +6,7 @@ class YOLOModel:
     def __init__(self, weights: str = "weights/yolo/yolov8l.pt"):
         self.model = YOLO(weights)
         self.cfg = "configs/yolo_config.yaml"
+        self.data = "configs/yolo_dataset.yaml"
 
     def train(
         self,
@@ -18,6 +19,7 @@ class YOLOModel:
     ):
         return self.model.train(
             cfg=self.cfg,
+            data=self.data,
             epochs=epochs,
             imgsz=imgsz,
             batch=batch,
