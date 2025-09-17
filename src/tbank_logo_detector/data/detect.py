@@ -72,8 +72,8 @@ class Detector:
 def detect(
     images_dir: Path,
     output_dir: Path,
-    box_threshold=0.30,
-    text_threshold=0.25,
+    box_threshold: float,
+    text_threshold: float,
 ):
     """
     Detects and saves all logo boxes found in images dir

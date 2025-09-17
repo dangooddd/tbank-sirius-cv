@@ -13,7 +13,9 @@ def main():
     annotate_parser = subparsers.add_parser("annotate")
     annotate_parser.add_argument("--input-dir", type=Path, default="data/raw/boxes")
     annotate_parser.add_argument("--output-dir", type=Path, default="data/raw/labels")
-    annotate_parser.add_argument("--reference-dir", type=Path, default="data/reference")
+    annotate_parser.add_argument(
+        "--reference-dir", type=Path, default="assets/reference"
+    )
     annotate_parser.add_argument("--conf", type=float, default=0.8)
     annotate_parser.add_argument("--model-name", type=str, default="ViT-bigG-14")
     annotate_parser.add_argument("--pretrained", type=str, default="laion2b_s39b_b160k")

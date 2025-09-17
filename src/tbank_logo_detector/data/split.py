@@ -26,7 +26,7 @@ def copy_images_with_labels(
             continue
 
 
-def split(dataset_dir: Path, split_dst: Path, val_size=0.2, seed=34):
+def split(dataset_dir: Path, split_dst: Path, val_size: float, seed=34):
     images_src = dataset_dir / "images"
     labels_src = dataset_dir / "labels"
 

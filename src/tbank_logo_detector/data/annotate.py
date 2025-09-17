@@ -194,7 +194,7 @@ class Annotator:
         self,
         model_name: str = "ViT-bigG-14",
         pretrained: str = "laion2b_s39b_b160k",
-        reference_dir: Path = Path("data/raw/reference"),
+        reference_dir: Path = Path("assets/reference"),
         conf: float = 0.8,
         device: str = "cuda",
     ):
@@ -265,8 +265,8 @@ class Annotator:
 def legacy_annotate(
     boxes_dir: Path,
     output_dir: Path,
-    model_name="ViT-H-14",
-    pretrained="laion2b_s32b_b79k",
+    model_name: str,
+    pretrained: str,
 ):
     """Annotates images from boxes that was defined in detect.py"""
     annotator = Annotator(model_name=model_name, pretrained=pretrained)
@@ -281,10 +281,10 @@ def legacy_annotate(
 def annotate(
     boxes_dir: Path,
     output_dir: Path,
-    reference_dir: Path = "data/reference",
-    conf=0.8,
-    model_name="ViT-bigG-14",
-    pretrained="laion2b_s32b_b79k",
+    reference_dir: Path,
+    conf: float,
+    model_name: str,
+    pretrained: str,
 ):
     """Annotates images from boxes that was defined in detect.py"""
     annotator = Annotator(
