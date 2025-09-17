@@ -17,6 +17,9 @@ def main():
     )
     train_parser.add_argument("--epochs", type=int, default=50)
     train_parser.add_argument("--batch", type=int, default=16)
+    train_parser.add_argument("--nbs", type=int, default=64)
+    train_parser.add_argument("--lr0", type=float, default=0.01)
+    train_parser.add_argument("--resume", type=bool, default=False)
 
     # predict command
     predict_parser = subparsers.add_parser("predict")
@@ -35,6 +38,9 @@ def main():
             weights_path=args.weights_path,
             epochs=args.epochs,
             batch=args.batch,
+            lr0=args.lr0,
+            nbs=args.nbs,
+            resume=args.resume,
         )
     elif args.command == "predict":
         predict(
@@ -45,9 +51,9 @@ def main():
         )
 
 
-def train(model_name: str, weights_path: Path, epochs=50, batch=16):
+def train(model_name: str, weights_path: Path, epochs, batch, nbs, lr0, resume):
     model = load_model(model_name, weights_path)
-    model.train(epochs=epochs, batch=batch)
+    model.train(epochs=epochs, batch=batch, lr0=lr0, nbs=nbs, resume=resume)
 
 
 def predict(model_name: str, weights_path: Path, image_path: Path, conf: float):

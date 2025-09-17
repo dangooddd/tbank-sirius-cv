@@ -7,12 +7,22 @@ class YOLOModel:
         self.model = YOLO(weights)
         self.data_yaml = "configs/yolo_dataset.yaml"
 
-    def train(self, epochs: int = 50, batch: int = 16, imgsz: int = 640):
+    def train(
+        self,
+        epochs: int = 50,
+        batch: int = 16,
+        imgsz: int = 640,
+        nbs: int = 32,
+        lr0: float = 0.01,
+        resume: bool = False,
+    ):
         return self.model.train(
             data=self.data_yaml,
             epochs=epochs,
             imgsz=imgsz,
             batch=batch,
+            nbs=nbs,
+            lr0=lr0,
         )
 
     def validate(self):
