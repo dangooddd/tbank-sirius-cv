@@ -1,7 +1,8 @@
-FROM rockylinux:9-minimal
+FROM python:3.12-slim-bookworm
 
-RUN microdnf install -y python-pip curl jq
-RUN pip install uv
+RUN apt update
+RUN apt install -y wget
+RUN pip install --root-user-action ignore uv
 
 COPY uv.lock pyproject.toml LICENSE start.sh /app/
 COPY src/ /app/src/
@@ -9,7 +10,7 @@ COPY src/ /app/src/
 WORKDIR /app
 
 RUN chmod +x start.sh
-RUN uv venv --python 3.11 .venv
+RUN uv venv .venv
 RUN uv sync --no-dev
 
 EXPOSE 8000

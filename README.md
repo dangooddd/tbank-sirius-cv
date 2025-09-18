@@ -19,6 +19,16 @@ docker build -t tbank-logo-detector .
 docker run -p 8000:8000 tbank-logo-detector
 ```
 
+> [!Warning]
+> Если в результате запуска контейнера было получено сообщение с ошибкой `Error: Failed to download model weights.`,
+> то вероятно сервис github usercontent недоступен (на момент 18.09.2025 недоступен с провайдером Ростелеком).
+>
+> В таком случае можно перейти [по ссылке на Яндекс Диск](https://disk.yandex.ru/d/cfbO4HlkvXMbGw) и скачать файл `weights.pt` вручную.
+> После этого контейнер запустить с помощью команды (/абсолютный/путь -- абсолютный путь к директории, куда скачан файл weights.pt):
+> ```sh
+> docker run --mount type=bind,source=/абсолютный/путь,target=/app/weights -p 8000:8000 tbank-logo-detector
+> ```
+
 Веса модели скачиваются автоматически при запуске контейнера.
 Они доступны для скачивания на [странице релизов](https://github.com/dangooddd/tbank-sirius-cv/releases), как и датасет валидационной выборки.
 
